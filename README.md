@@ -1,4 +1,4 @@
-# chatbot
+# Chatbot For Image Recognition and QnA
 ### Prerequisites
 
 Ensure you have the following installed:
@@ -16,7 +16,7 @@ Ensure you have the following installed:
 2. Navigate to the cloned directory:
 
    ```bash
-   cd [/home/deepender/Desktop/Projects/Langchain/Chatbot-text-to-text-and-image-to-text]
+   cd ["location of the folder"]
    ```
 
 3. Create and activate a virtual environment (optional but recommended):
