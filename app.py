@@ -1,50 +1,38 @@
-# Q&A Chatbot
-#from langchain.llms import OpenAI
+# app.py
 
-from dotenv import load_dotenv # type: ignore
-
-load_dotenv()  # take environment variables from .env.
-
-import streamlit as st # type: ignore
+from dotenv import load_dotenv  # type: ignore
 import os
-import pathlib
-import textwrap
+import google.generativeai as genai  # type: ignore
 
-import google.generativeai as genai # type: ignore
+# Load environment variables
+load_dotenv()
 
-from IPython.display import display # type: ignore
-from IPython.display import Markdown # type: ignore
-
-
-def to_markdown(text):
-  text = text.replace('•', '  *')
-  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
-
-os.getenv("GOOGLE_API_KEY")
+# Configure API key for Google Gemini
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-## Function to load OpenAI model and get respones
-
-def get_gemini_response(question):
+# Function to generate response using the Gemini model
+def text_to_text_chatbot(question):
     model = genai.GenerativeModel('gemini-1.5-pro')
     response = model.generate_content(question)
     return response.text
 
-##initialize our streamlit app
+# Optional: Only run Streamlit app if this script is executed directly
+if __name__ == '__main__':
+    import streamlit as st  # Only import Streamlit when running standalone
 
-st.set_page_config(page_title="Q&A Demo")
+    st.set_page_config(page_title="Q&A Demo")
 
-st.header("Gemini Application")
+    st.header("Gemini Application")
 
-input=st.text_input("Input: ",key="input")
+    user_input = st.text_input("Input: ", key="input")
 
+    submit = st.button("Ask the question")
 
-submit=st.button("Ask the question")
-
-## If ask button is clicked
-
-if submit:
-    
-    response=get_gemini_response(input)
-    st.subheader("The Response is")
-    st.write(response)
+    # If the button is clicked
+    if submit:
+        if user_input:
+            response = text_to_text_chatbot(user_input)  # Call the function
+            st.subheader("The Response is")
+            st.write(response)
+        else:
+            st.warning("Please enter a question.")
