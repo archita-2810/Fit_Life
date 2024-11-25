@@ -1,7 +1,9 @@
 import streamlit as st
 from app import text_to_text_chatbot  # Import your text-to-text chatbot function
+from finalworkoutplanner import mainq
 from vision import image_to_text_chatbot  # Import your image-to-text chatbot function
 from diet_planner import diet_planner_app  # Import the diet planner function
+from workout import mainw
 from workout_planner import workout_planner_app  # Import the workout planner function
 from PIL import Image
 
@@ -52,4 +54,4 @@ elif option == 'Diet Planner':
 # If the user selects Workout Planner
 elif option == 'Workout Planner':
     st.header('Workout Planner')
-    workout_planner_app()  # Call the workout planner function
+    mainq()  # Call the workout planner function

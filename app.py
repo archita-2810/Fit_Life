@@ -3,6 +3,7 @@
 from dotenv import load_dotenv  # type: ignore
 import os
 import google.generativeai as genai  # type: ignore
+import streamlit as st  # Import Streamlit
 
 # Load environment variables
 load_dotenv()
@@ -16,23 +17,30 @@ def text_to_text_chatbot(question):
     response = model.generate_content(question)
     return response.text
 
-# Optional: Only run Streamlit app if this script is executed directly
-if __name__ == '__main__':
-    import streamlit as st  # Only import Streamlit when running standalone
+def run_chatbot_app():
+    st.title("FitLife Chatbot:")
 
-    st.set_page_config(page_title="Q&A Demo")
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
 
-    st.header("Gemini Application")
+    # Display chat messages
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-    user_input = st.text_input("Input: ", key="input")
+    # Input from the user
+    if prompt := st.chat_input("What is your question?"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-    submit = st.button("Ask the question")
+        # Get response from Google Gemini
+        response_text = text_to_text_chatbot(prompt)  # Call the function to get the response
 
-    # If the button is clicked
-    if submit:
-        if user_input:
-            response = text_to_text_chatbot(user_input)  # Call the function
-            st.subheader("The Response is")
-            st.write(response)
-        else:
-            st.warning("Please enter a question.")
+        # Append the assistant's response to the messages
+        st.session_state.messages.append({"role": "assistant", "content": response_text})
+        with st.chat_message("assistant"):
+            st.markdown(response_text)
+
+if __name__ == "__main__":
+    run_chatbot_app()
